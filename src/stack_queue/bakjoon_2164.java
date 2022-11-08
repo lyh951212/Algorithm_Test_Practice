@@ -14,26 +14,15 @@ public class bakjoon_2164 {
         for(int i = 0 ; i < n; ++i)
             numQ.add(i+1);
 
-        while(true)
+        while(numQ.size() > 1)
         {
-            // 하나 남아있으면 바로 출력
-            if(numQ.size() == 1) {
-                bw.write(String.valueOf(numQ.peek()));
-                break;
-            }
-
-            // 큐에 남은게 있다면
-            //  1. 맨 위에 있는거 빼기 - 뺀 후 마지막 하나 남아있으면 그대로 break
             int front = numQ.poll();
-            if(numQ.size() == 1) {
-                bw.write(String.valueOf(numQ.peek()));
-                break;
+            // 맨 위 카드를 버리고 나서 나머지가 2개 이상이면 맨앞카드를 맨뒤로 이동
+            if(numQ.size() > 1) {
+                numQ.add(numQ.poll());
             }
-            // 2. 맨 위에 있는거 빼고 남은게 2개 이상이면 맨 위에 있던 카드 맨 뒤로 보냄
-            numQ.add(numQ.poll());
-
         }
-
+        bw.write(String.valueOf(numQ.peek()));
         bw.flush();
         br.close();
         bw.close();
