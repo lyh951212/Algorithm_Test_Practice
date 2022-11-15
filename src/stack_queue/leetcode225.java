@@ -42,6 +42,7 @@ public class leetcode225 {
         myStack.push(2);
         myStack.push(3);
 
+        ArrayList<Integer> arrTest = new ArrayList<>(50);
         System.out.println(myStack.pop());
 
     }
