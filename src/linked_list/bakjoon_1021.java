@@ -1,61 +1,132 @@
-package linked_list;
+class MyLinkedList {
 
-import java.io.*;
-import java.nio.Buffer;
-import java.util.*;
+    private Node head;
+    private Node tail;
+    private int size;
 
-//14272kb,	124ms
-public class bakjoon_1021 {
+    private class Node {
+        int val;
+        Node next;
+        Node prev;
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        public Node(int val) {
+            this.val = val;
+            this.next = null;
+            this.prev = null;
+        }
+    }
 
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int n =  Integer.parseInt(st.nextToken());
-        int m =  Integer.parseInt(st.nextToken());
+    public MyLinkedList() {
 
-        ArrayList<Integer> numbersArr = new ArrayList<>(n);
-        for(int i = 0 ; i < n; ++i )
-        {
-            numbersArr.add(i+1);
+    }
+
+    public int get(int index) {
+        if (index >= size || index < 0) {
+            return -1;
         }
 
-        Queue<Integer> orderQ = new ArrayDeque<>(m);
-        st = new StringTokenizer(br.readLine());
-        for(int i = 0 ; i < m; ++i )
-        {
-            orderQ.add(Integer.parseInt(st.nextToken()));
+        Node curr = head;
+        int i = 0;
+        while (i++ < index) {
+            curr = curr.next;
+        }
+        return curr.val;
+    }
+
+    public void addAtHead(int val) {
+        if (head == null) {
+            head = new Node(val);
+            tail = head;
+        } else {
+            Node curr = head;
+            head = new Node(val);
+            head.next = curr;
+            curr.prev = head;
+        }
+        size++;
+    }
+
+    public void addAtTail(int val) {
+        if (head == null) {
+            head = new Node(val);
+            tail = head;
+        } else {
+            Node curr = tail;
+            tail = new Node(val);
+            curr.next = tail;
+            tail.prev = curr;
+        }
+        size++;
+    }
+
+    public void addAtIndex(int index, int val) {
+        if (index > size || index < 0) {
+            return;
         }
 
-        int ans = 0;
-        while(false == orderQ.isEmpty())
-        {
-            Integer firstNum = orderQ.peek();
-            if(Objects.equals(numbersArr.get(0), firstNum))
-            {
-                numbersArr.remove(0);
-                orderQ.poll();
-                continue;
+        if (index == size) {
+            addAtTail(val);
+            return;
+        } else if (index == 0) {
+            addAtHead(val);
+            return;
+        } else {
+            Node curr = head;
+            int i = 0;
+            while (i++ < index) {
+                curr = curr.next;
             }
+            Node insertedNode = new Node(val);
+            insertedNode.prev = curr.prev;
+            insertedNode.next = curr;
 
-            int idx = numbersArr.indexOf(firstNum);
-            // 앞쪽에 있다 -> 2번
-            if(idx <= (numbersArr.size())/2)
-            {
-                numbersArr.add(numbersArr.remove(0));
-            }
-            // 뒤쪽에 있다 -> 3번
-            else
-            {
-                numbersArr.add(0, numbersArr.remove(numbersArr.size()-1));
-            }
-            ans++;
+            curr.prev.next = insertedNode;
+            curr.prev = insertedNode;
+        }
+        size++;
+    }
+
+    public void deleteAtIndex(int index) {
+        if (index >= size || index < 0) {
+            return;
         }
 
-        bw.write(String.valueOf(ans));
-        bw.flush();
-        br.close();
-        bw.close();
+        if (index == 0) {
+            Node curr = head.next;
+            head = curr;
+        } else if (index == size - 1) {
+            Node curr = tail.prev;
+            tail = curr;
+        } else {
+            Node curr = head;
+            int i = 0;
+            while (i++ < index) {
+                curr = curr.next;
+            }
+            curr.prev.next = curr.next;
+            curr.next.prev = curr.prev;
+        }
+
+        size--;
+
+    }
+
+    public void printAll() {
+        Node curr = head;
+        int i = 0;
+        while (i++ < size) {
+            System.out.println(curr.val);
+            curr = curr.next;
+        }
     }
 }
+
+/**
+ * Your MyLinkedList object will be instantiated and called as such:
+ * MyLinkedList obj = new MyLinkedList();
+ * int param_1 = obj.get(index);
+ * obj.addAtHead(val);
+ * obj.addAtTail(val);
+ * obj.addAtIndex(index,val);
+ * obj.deleteAtIndex(index);
+ */
